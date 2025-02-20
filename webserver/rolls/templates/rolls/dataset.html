@@ -1,0 +1,182 @@
+{%extends 'rolls/layoutpagine.html' %}
+{% load static %}
+
+{%block content%}
+    <h2 style="color:navy">PANDA Dataset</h2>
+    <p>Description of datasets used for PANDA analyses </p>
+   
+    <div class="container my-4">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Clinical Data</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Gene type</a>
+            </li>
+        
+            <li class="nav-item" role="presentation"></li>
+                <a class="nav-link" id="messages-tab" data-bs-toggle="tab" href="#messages" role="tab" aria-controls="messages" aria-selected="false">Clinical features</a>
+            </li>
+            <li class="nav-item" role="presentation"></li>
+            <a class="nav-link" id="message-tab" data-bs-toggle="tab" href="#message" role="tab" aria-controls="message" aria-selected="false">Tumor abbreviations</a>
+        </li>
+        </ul>
+    
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <br>
+                <p><a href=" https://gdc.cancer.gov/about-data/publications/PanCan-Clinical-2018" target="_blank">Clinical data</a> are the data provided by TCGA</p>
+                <br>
+                    <caption>Number of Samples from TCGA</caption>
+                    <table class="table table-hover table-sm" style="width: 100%; margin: 0 auto; text-align: left; border-collapse: collapse; border: 1px solid white;">
+                        <thead style="position: sticky; top: 0; background-color: white; font-weight: bold;">
+                            <tr>
+                                {% for colonna in dati.0 %}
+                                    <th style="border: 1px solid white; font-weight: bold;">{{ colonna }}</th> <!-- Bordo per le intestazioni -->
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody style="height: auto; overflow-y: auto;">
+                            {% for riga in dati|slice:"1:" %}
+                                <tr>
+                                    {% for colonna in riga %}
+                                        <td style="border: 1px solid white;">{{ colonna }}</td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+           
+            
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <br>
+                <p>list of gene types for PANDA analyses</p>
+                <br>
+                    <table class="table table-hover table-sm" style="width: 100%; margin: 0 auto; text-align: left; border-collapse: collapse; border: 1px solid white;">
+                        <thead style="position: sticky; top: 0; background-color: white; font-weight: bold;">
+                            <tr>
+                                {% for colonna in dati_genetype.0 %}
+                                    <th style="border: 1px solid white; font-weight: bold;">{{ colonna }}</th> <!-- Bordo per le intestazioni -->
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody style="height: auto; overflow-y: auto;">
+                            {% for riga in dati_genetype|slice:"1:" %}
+                                <tr>
+                                    {% for colonna in riga %}
+                                        <td style="border: 1px solid white;">{{ colonna }}</td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            
+                <div class="tab-pane fade" id="messages" role="tabpanel" aria-labelledby="messages-tab">
+                    <br>
+                    <p>List of clinical Feature avaible for tumor </p>
+        
+    
+                    <div class="table-responsive" >
+                        <table id="Mytable" class="table table-hover table-sm" style="width: 100%; margin: 0 auto; text-align: left; border-collapse: collapse; border: 1px solid white; font-size: 12px;">
+                            <thead style="position: sticky; top: 0; background-color: white; z-index: auto;">
+                                <tr>
+                                    {% for colonna in dati_feature.0 %}
+                                        <th style="border: 1px solid white; font-weight: bold;">{{ colonna }}</th> <!-- Bordo per le intestazioni -->
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for riga in dati_feature|slice:"1:" %}
+                                    <tr>
+                                        {% for colonna in riga %}
+                                            <td style="border: 1px solid white;">{{ colonna }}</td>
+                                        {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <br>
+                    <p>Parameters compared for each feature </p>
+                
+                    <div class="table-responsive" >
+                        <table id="Mytable" class="table table-hover table-sm" style="width: 100%; margin: 0 auto; text-align: left; border-collapse: collapse; border: 1px solid white; font-size: 12px;">
+                            <thead style="position: sticky; top: 0; background-color: white; z-index: auto;">
+                                <tr>
+                                    {% for colonna in dati_parametri.0 %}
+                                        <th style="border: 1px solid white; font-weight: bold;">{{ colonna }}</th> <!-- Bordo per le intestazioni -->
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for riga in dati_parametri|slice:"1:" %}
+                                    <tr>
+                                        {% for colonna in riga %}
+                                            <td style="border: 1px solid white;">{{ colonna }}</td>
+                                        {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                
+            <div class="tab-pane fade" id="message" role="tabpanel" aria-labelledby="message-tab">
+                <br>
+                <p>TCGA Study Abbreviations </p>
+    
+
+                <div class="table-responsive" >
+                    <table id="Mytable" class="table table-hover table-sm" style="width: 100%; margin: 0 auto; text-align: left; border-collapse: collapse; border: 1px solid white; font-size: 12px;">
+                        <thead style="position: sticky; top: 0; background-color: white; z-index: auto;">
+                            <tr>
+                                {% for colonna in dati_tumor.0 %}
+                                    <th style="border: 1px solid white; font-weight: bold;">{{ colonna }}</th> <!-- Bordo per le intestazioni -->
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for riga in dati_tumor|slice:"1:" %}
+                                <tr>
+                                    {% for colonna in riga %}
+                                        <td style="border: 1px solid white;">{{ colonna }}</td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    
+
+
+  <!-- Aggiungi questo stile per alternare i colori delle righe -->
+  <style>
+    tbody tr:nth-child(odd) {
+        background-color: white;
+    }
+    tbody tr:nth-child(even) {
+        background-color: rgba(208,231,231,0.5); /* Colore grigio chiaro */
+    }
+</style>
+
+
+  
+   
+{%endblock%}
+ 
+
