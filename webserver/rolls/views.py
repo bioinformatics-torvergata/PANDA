@@ -1054,10 +1054,12 @@ def somatic_interaction_analysis(request):
             if os.path.isdir(dir): 
                 files=os.listdir(dir)
                 print(files)
+                n=0
                 for file in files:
                     if file[-3:]=='png':
                         if 'somaticInteractions' in file:
                             image_interact=os.path.join('media/saveanalisi',inp3,file)  
+                            n+=1
                     if 'results' in file:
                         name=file
                         result_data=os.path.join(output_data,inp3,file)
@@ -1066,19 +1068,25 @@ def somatic_interaction_analysis(request):
                 #zip folder analisi -> results.zip
                 folder_to_zip=os.path.join(dir,"results.zip")
                 subprocess.run(["zip", "-r", folder_to_zip, "."],cwd=dir)
+                if n==1:
 
-                form=FormMutationChoice()
-                return render(request, 'rolls/somatic_interaction_analysis.html', {'form':form, 
-                    'tumor':tumor,
-                    'number':number,
-                    'image_interact':image_interact,
-                    'go':'Valid',
-                    'dir':inp3,
-                    'dati':result,
-                    #'dir':'media/saveanalisi/'+inp3+'/'+name, #dowload single table
+                    form=FormMutationChoice()
+                    return render(request, 'rolls/somatic_interaction_analysis.html', {'form':form, 
+                        'tumor':tumor,
+                        'number':number,
+                        'image_interact':image_interact,
+                        'go':'Valid',
+                        'dir':inp3,
+                        'dati':result,
+                        #'dir':'media/saveanalisi/'+inp3+'/'+name, #dowload single table
+                        'count': count,
+                        })
+                else:
+                    form=FormMutationChoice()
+                    return render(request, 'rolls/somatic_interaction_analysis.html', {'form':form,
+                    'tumor':tumor, 
                     'count': count,
-                    })
-
+                    'go':'error'})
             else:
                 form=FormMutationChoice()
                 return render(request, 'rolls/somatic_interaction_analysis.html', {'form':form,
@@ -1114,10 +1122,12 @@ def gene_mutation_analysis(request):
             if return_code!=1:
                 if os.path.isdir(dir): 
                     files=os.listdir(dir)
+                    n=0
                     for file in files:
                         if file[-3:]=='png':
                             if 'lollipopPlot' in file:
-                                image_lolli=os.path.join('media/saveanalisi',inp3,file)  
+                                image_lolli=os.path.join('media/saveanalisi',inp3,file) 
+                                n+=1 
                         if 'txt' in file:
                             result_data=os.path.join(output_data,inp3,file)  
                             result=read_table(result_data)
@@ -1125,19 +1135,27 @@ def gene_mutation_analysis(request):
                     #zip folder analisi -> results.zip
                     folder_to_zip=os.path.join(dir,"results.zip")
                     subprocess.run(["zip", "-r", folder_to_zip, "."],cwd=dir)
-
-                    
-                    form=tumorGeneform()
-                    return render(request, 'rolls/gene_mutation_analysis.html', {'form':form, 
+                    if n==1:
+                        
+                        form=tumorGeneform()
+                        return render(request, 'rolls/gene_mutation_analysis.html', {'form':form, 
+                            'tumor':tumor,
+                            'gene':gene,
+                            'dati':result,
+                            'image_lolli':image_lolli,
+                            'go':'Valid',
+                            #'dir':'media/saveanalisi/'+inp3+'/result.txt', #download single table
+                            'dir':inp3,
+                            'count': count,
+                            })
+                    else:
+                        form=tumorGeneform()
+                        return render(request, 'rolls/gene_mutation_analysis.html', {'form':form,
+                        'gene':gene, 
                         'tumor':tumor,
-                        'gene':gene,
-                        'dati':result,
-                        'image_lolli':image_lolli,
-                        'go':'Valid',
-                        #'dir':'media/saveanalisi/'+inp3+'/result.txt', #download single table
-                        'dir':inp3,
                         'count': count,
-                        })
+                        'go':'error'})
+
 
             else:
                     form=tumorGeneform()
@@ -1298,7 +1316,7 @@ TUMOR_FEATURE_MAPPING_R = {
     "BRCA":['person_neoplasm_cancer_status'], #'radiation_therapy'
     "CESC":['radiation_therapy'],
     "CHOL":['gender','person_neoplasm_cancer_status'],
-    "COAD":['gender','person_neoplasm_cancer_status'],#,'radiation_therapy'],
+    "COAD":['gender','person_neoplasm_cancer_status'],#'radiation_therapy'],#####
     "DLBC":['gender','radiation_therapy'],
     "ESCA":['alcohol_history_documented','gender','person_neoplasm_cancer_status','radiation_therapy'],
     "GBM":['gender','radiation_therapy'],
@@ -1359,6 +1377,7 @@ def de_mut_clinical_feature(request):
             if os.path.isdir(dir): 
                 files=os.listdir(dir)
                 print(files)
+                n=0
                 for file in files:
                     if 'csv' in file:
                         result=file
@@ -1366,28 +1385,34 @@ def de_mut_clinical_feature(request):
                     if 'png' in file:
                         if 'forestPlot' in file:
                             image_forest=os.path.join('media/saveanalisi',inp3,file)  
-                            
+                            n+=1
                        
                         if 'coBarplot' in file:
                             image_coBarplot=os.path.join('media/saveanalisi',inp3,file)
-                        
+                            n+=1
 
                 #zip folder analisi -> results.zip
                 folder_to_zip=os.path.join(dir,"results.zip")
                 subprocess.run(["zip", "-r", folder_to_zip, "."],cwd=dir)
+                if n==2:
 
-
-                form=featuremutationform()
-                return render(request, 'rolls/de_mut_clinical_feature.html', {'form':form, 
-                    'tumor':tumor,
-                    'feature':feature,
-                    'image_forest':image_forest,
-                    'image_coBarplot':image_coBarplot,
-                    'go':'Valid',
-                    'table':'media/saveanalisi/'+inp3+'/'+result,
-                    'dir':inp3,
+                    form=featuremutationform()
+                    return render(request, 'rolls/de_mut_clinical_feature.html', {'form':form, 
+                        'tumor':tumor,
+                        'feature':feature,
+                        'image_forest':image_forest,
+                        'image_coBarplot':image_coBarplot,
+                        'go':'Valid',
+                        'table':'media/saveanalisi/'+inp3+'/'+result,
+                        'dir':inp3,
+                        'count': count,
+                        })
+                else:
+                    form=featuremutationform()
+                    return render(request, 'rolls/de_mut_clinical_feature.html', {'form':form,
+                    'tumor':tumor, 
                     'count': count,
-                    })
+                    'go':'error'})
 
             else:
                 form=featuremutationform()
@@ -1437,32 +1462,39 @@ def deconvolution(request):
             count = increment_counter()
             # if os.path.isdir(dir): 
             files=os.listdir(dir)
+            n=0
             for file in files:
                 print(file)
                 if 'boxplot' in file:
                     image_box=os.path.join('media/saveanalisi',inp3,file)
                     print(image_box)
-                
+                    n+=1
                 if 'stat_tabel' in file:
                     result_tsv=os.path.join('media/saveanalisi',inp3,file)
                     result_data=os.path.join(output_data,inp3,file)
                     result=read_table(result_data)
-
+                    n+=1
 
             #zip folder analisi -> results.zip
             folder_to_zip=os.path.join(dir_saveresults,"results.zip")
             subprocess.run(["zip", "-r", folder_to_zip, "."],cwd=dir_saveresults)
-
-            form=deconvolution_form()                         
-            return render(request, 'rolls/deconvolution.html', {'form':form, 
-                'tumor':tumor,
-                'image1':image_box,
+            if n==2:
+                form=deconvolution_form()                         
+                return render(request, 'rolls/deconvolution.html', {'form':form, 
+                    'tumor':tumor,
+                    'image1':image_box,
+                    'count': count,
+                    'dati':result,
+                    'go':'Valid',
+                    'table':result_tsv,
+                    'dir':inp3,
+                    })
+            else:
+                form=deconvolution_form()
+                return render(request, 'rolls/deconvolution.html', {'form':form,
                 'count': count,
-                'dati':result,
-                'go':'Valid',
-                'table':result_tsv,
-                'dir':inp3,
-                })
+                'tumor':tumor, 
+                'go':'error'})
 
         else:
             form=deconvolution_form()
@@ -1499,32 +1531,40 @@ def corr_cell_pathway(request):
             count = increment_counter()
             # if os.path.isdir(dir): 
             files=os.listdir(dir)
+            n=0
             for file in files:
                 print(file)
                
                 if 'heatmap' in file:
                     image_heat=os.path.join('media/saveanalisi',inp3,file)
                     #print(image_heat)
+                    n+=1
                 if 'tsv' in file:
                     result_tsv=os.path.join('media/saveanalisi',inp3,file)
                     result_data=os.path.join(output_data,inp3,file)
                     result=read_table(result_data)
-            
+                    n+=1
             #zip folder analisi -> results.zip
             folder_to_zip=os.path.join(dir_saveresults,"results.zip")
             subprocess.run(["zip", "-r", folder_to_zip, "."],cwd=dir_saveresults)
-
-            form=formcorrelation()                         
-            return render(request, 'rolls/corr_cell_pathway.html', {'form':form, 
+            if n==2:
+                form=formcorrelation()                         
+                return render(request, 'rolls/corr_cell_pathway.html', {'form':form, 
+                    'tumor':tumor,
+                    'db':db,
+                    'image2':image_heat,
+                    'dati':result,
+                    'go':'Valid',
+                    #'dir':result_tsv,
+                    'dir':inp3,
+                    'count': count,
+                    })
+            else:
+                form=formcorrelation()
+                return render(request, 'rolls/corr_cell_pathway.html', {'form':form,
                 'tumor':tumor,
-                'db':db,
-                'image2':image_heat,
-                'dati':result,
-                'go':'Valid',
-                #'dir':result_tsv,
-                'dir':inp3,
-                'count': count,
-                })
+                'count': count, 
+                'go':'error'})
 
         else:
             form=formcorrelation()
