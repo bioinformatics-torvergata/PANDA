@@ -63,10 +63,14 @@ if(length(P_mut)<5){ #non ci sono abbastanza campioni mutati
 
 
 sample_type <- c(rep(c("MUT"),times=c(length(P_mut))),rep(c("WT"),times=c(length(P))))
-sample_id <- c(colnames(cts))
+sample_id <- c(P_mut,P)
+#sample_id <- c(colnames(cts))
+
 
 coldata <- data.frame(Sample_ID = sample_id, Type = sample_type)
 coldata <- coldata %>% column_to_rownames(., var = 'Sample_ID')
+
+cts <- cts[, sample_id]
 
 dds <- DESeqDataSetFromMatrix(countData = cts, colData= coldata, design = ~Type)
 
