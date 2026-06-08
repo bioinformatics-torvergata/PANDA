@@ -474,7 +474,7 @@ def copyfile(tumor,pathfiles,dir_saveresults):
             copy_filepath=os.path.join(dir_saveresults, os.path.basename(file))
             # print('copia qui: ',copy_filepath)
        
-            shutil.copy(path_file,copy_filepath )
+            shutil.copyfile(path_file,copy_filepath )
 
     #copy file zip:
     result_zip=os.path.join(pathfiles,'results.zip')

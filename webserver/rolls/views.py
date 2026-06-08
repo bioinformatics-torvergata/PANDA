@@ -913,6 +913,8 @@ def survival_with_gene_mutation_status(request):
 ########### TUMOR MUTATION ANALYSES ########### 
 def tumor_mutation_analysis(request):
     count = get_counter()
+    image_summary=None
+    image_titv=None
     if request.method == 'POST':
 
         form = FormTumorMutation(request.POST)
@@ -972,6 +974,7 @@ def tumor_mutation_analysis(request):
 ########### TUMOR ONCOPLOT  ########### 
 def tumor_oncoplot(request):
     count = get_counter()
+    image_oncoplot = None
     if request.method == 'POST':
 
         form = FormMutationChoice(request.POST)
@@ -985,6 +988,10 @@ def tumor_oncoplot(request):
             
             out = subprocess.run(['Rscript', 'script/tumor_oncoplot.R',tumor,dir,number], capture_output=True, text=True)
             print(out)
+            print("--- R STDOUT ---")
+            print(out.stdout)
+            print("--- R STDERR ---")
+            print(out.stderr) # <--- QUI CI SARÀ SCRITTO L'ERRORE DI R
             count = increment_counter()
             if os.path.isdir(dir): 
                 files=os.listdir(dir)
@@ -1037,6 +1044,7 @@ def read_table_comma(file_path):
 
 def somatic_interaction_analysis(request):
     count = get_counter()
+    image_interact= None
     if request.method == 'POST':
 
         form = FormMutationChoice(request.POST)
@@ -1103,6 +1111,7 @@ def somatic_interaction_analysis(request):
 ############ GENE MUTATION ANALYSIS ##############
 def gene_mutation_analysis(request):
     count = get_counter()
+    image_lolli= None
     if request.method == 'POST':
 
         form = tumorGeneform(request.POST)
